@@ -6,7 +6,7 @@ setprecision(65536)
 @testset "xsum" begin
     for n in (100, 10^4)
         a = randn(n)
-        exact = Float64.(sum(big.(a)))
+        exact = Float64(sum(big.(a)))
         @test exact == xsum(a)
 
         A = [a a]
