@@ -1,6 +1,7 @@
 # Xsum: Exactly rounded floating-point sums in Julia
 [![Travis Status](https://travis-ci.org/stevengj/Xsum.jl.svg)](https://travis-ci.org/stevengj/Xsum.jl)
-[![Appveyor status](https://ci.appveyor.com/api/projects/status/6557ypbhxst04t5w/branch/master?svg=true)](https://ci.appveyor.com/project/stevengj/Xsum-jl/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/3gxr4kf0a6uwly1y?svg=true)](https://ci.appveyor.com/project/StevenGJohnson/xsum-jl)
+
 
 The Xsum package is a Julia wrapper around the Radford Neal's [xsum package](https://gitlab.com/radfordneal/xsum)
 for exactly rounded double-precision floating-point summation.  The [xsum algorithm](https://arxiv.org/abs/1505.05571) takes `n` double precision (`Float64` or smaller) floating-point values as input and computes the "exactly rounded sum" — equivalent to summing the values in infinite precision and rounding the result to the nearest `Float64` value.
