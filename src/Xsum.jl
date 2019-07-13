@@ -57,7 +57,7 @@ result.    Both real and complex sums are supported.
 """
 function xsum(itr)
     i = iterate(itr)
-    if isnothing(i)
+    if i === nothing
         zero = Base.mapreduce_empty_iter(identity, +, itr, Base.IteratorEltype(itr))
         return zero isa Real ? Float64(zero) : zero isa Complex ? ComplexF64(zero) : zero
     end
