@@ -13,7 +13,9 @@ setprecision(65536)
         @test exact == xsum(@view A[:,1])
         @test exact == xsum(@view Array(A')[1,:])
 
-        @test 2*exact == xsum(2*x for x in a)
+        @test 2exact == xsum(2x for x in a)
+
+        @test Complex(2exact, 4exact) == xsum(Complex(2x,4x) for x in a)
     end
 end
 
