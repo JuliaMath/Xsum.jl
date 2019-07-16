@@ -48,28 +48,31 @@ Base.accumulate!(s::XAccumulator, x::Complex) = Complex(accumulate!(s, x), XAccu
 XAccumulator(init::Complex) = Complex(XAccumulator(real(init)), XAccumulator(imag(init)))
 
 """
-    xsum(itr)
+    xsum([f,] itr)
 
-Compute the exactly rounded double-precision sum of the elements of the iterable collection `itr`.
-That is, return the sum as if (1) the elements of `itr` were computed to double (`Float64`) precision,
-(2) summed in *infinite* precision, and (3) rounded to the closest double-precision value in the final
-result.    Both real and complex sums are supported.
+Compute the exactly rounded double-precision sum of calling `f` (which defaults to `identity`) on
+the elements of the iterable collection `itr`. That is, return the sum as if (1) the elements of `f.(itr)`
+were converted to double (`Float64`) precision, (2) summed in *infinite* precision, and
+(3) rounded to the closest double-precision value in the final result.    Both real and complex
+sums are supported.
 """
-function xsum(itr)
+function xsum(f, itr)
     i = iterate(itr)
     if i === nothing
-        zero = Base.mapreduce_empty_iter(identity, +, itr, Base.IteratorEltype(itr))
+        zero = Base.mapreduce_empty_iter(f, +, itr, Base.IteratorEltype(itr))
         return zero isa Real ? Float64(zero) : zero isa Complex ? ComplexF64(zero) : zero
     end
     v, state = i
-    s = XAccumulator(v)
+    s = XAccumulator(f(v))
     while true
         i = iterate(itr, state)
         i === nothing && return float(s)
         v, state = i
-        accumulate!(s, v)
+        accumulate!(s, f(v))
     end
 end
+
+xsum(itr) = xsum(identity, itr)
 
 function xsum(a::StridedVector{Float64})
     stride(a,1) != 1 && return invoke(xsum, Tuple{Any}, a)
