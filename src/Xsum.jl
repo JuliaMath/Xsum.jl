@@ -66,7 +66,7 @@ end
 xsum(itr) = xsum(identity, itr)
 
 function xsum(a::StridedVector{Float64})
-    stride(a,1) != 1 && return xsum(identity, x)
+    stride(a,1) != 1 && return xsum(identity, a)
     n = length(a)
     if n < 256 # empirical threshold for small accumulator to be faster
         let acc = Base.RefValue{xsum_small_accumulator}()
