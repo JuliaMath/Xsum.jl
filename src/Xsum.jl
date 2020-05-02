@@ -2,16 +2,7 @@ module Xsum
 
 export xsum, XAccumulator
 
-# Load xsum libraries from our deps.jl
-const depsjl_path = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
-if !isfile(depsjl_path)
-    error("Xsum not installed properly, run Pkg.build(\"Xsum\"), restart Julia and try again")
-end
-include(depsjl_path)
-
-function __init__()
-    check_deps()
-end
+using xsum_jll
 
 include("xsum_h.jl")
 
