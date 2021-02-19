@@ -12,7 +12,7 @@ The Xsum package provides a function `xsum` to perform the summation.  To use it
 using Xsum
 xsum(iterator)
 ```
-where you can pass any iteratable collection (arrays, generators, tuples, etcetera).  Real or complex collections can be summed, but note that each element is converted to double precision (`Float64` or `ComplexF64`) before it is summed, and the result is always double precision.
+where you can pass any iterable collection (arrays, generators, tuples, etcetera).  Real or complex collections can be summed, but note that each element is converted to double precision (`Float64` or `ComplexF64`) before it is summed, and the result is always double precision.
 
 The variant `xsum(function, iterator)` is also supported, similar to `sum(function, iterator)`, which sums the result of the
 given `function` applied to each element of the `iterator`.
