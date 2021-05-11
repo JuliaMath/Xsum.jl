@@ -16,6 +16,8 @@ setprecision(65536)
         @test 2exact == xsum(2x for x in a) == xsum(x -> 2x, a)
 
         @test Complex(2exact, 4exact) == xsum(Complex(2x,4x) for x in a)
+
+        @test Complex(2exact, 4exact) == xsum(Iterators.flatten((a, Complex(x,4x) for x in a)))
     end
 end
 

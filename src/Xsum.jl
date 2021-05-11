@@ -35,7 +35,7 @@ Base.accumulate!(s::XAccumulator, x::Real) = begin; xsum_small_add1(s.acc, x); s
 
 Base.accumulate!(s::Complex{XAccumulator}, x::Complex) = Complex(accumulate!(real(s), real(x)), accumulate!(imag(s), imag(x)))
 Base.accumulate!(s::Complex{XAccumulator}, x::Real) = Complex(accumulate!(real(s), x), imag(s))
-Base.accumulate!(s::XAccumulator, x::Complex) = Complex(accumulate!(s, x), XAccumulator())
+Base.accumulate!(s::XAccumulator, x::Complex) = Complex(accumulate!(s, real(x)), XAccumulator(imag(x)))
 XAccumulator(init::Complex) = Complex(XAccumulator(real(init)), XAccumulator(imag(init)))
 
 """
@@ -59,7 +59,7 @@ function xsum(f, itr)
         i = iterate(itr, state)
         i === nothing && return float(s)
         v, state = i
-        accumulate!(s, f(v))
+        s = accumulate!(s, f(v))
     end
 end
 
