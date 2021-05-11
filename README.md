@@ -16,3 +16,13 @@ where you can pass any iterable collection (arrays, generators, tuples, etcetera
 
 The variant `xsum(function, iterator)` is also supported, similar to `sum(function, iterator)`, which sums the result of the
 given `function` applied to each element of the `iterator`.
+
+There is also a lower-level object `XAccumulator()` that you can use to perform more
+flexible sums.  A `s::XAccumulator` object represents partial sum, whose exactly
+rounded `Float64` result is given by `float(s)`.   `s = XAccumulator()` initializes
+a zero sum, and `accumulate!(s, x)` adds `x` to `s` where `x` is a real number
+(converted to `Float64`), an array of `Float64` values, or another `XAccumulator`.
+
+For example, if you wanted to compute an exactly rounded sum of a large vector `x` in parallel, you could call `accumulate!(XAccumulator(), xslice)` on a sequence of *slices*
+(portions) of `x` in parallel, and then combine the sub-accumulators to obtain the
+final sum.

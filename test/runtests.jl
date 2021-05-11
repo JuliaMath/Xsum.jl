@@ -21,3 +21,19 @@ setprecision(65536)
     end
 end
 
+@testset "XAccumulator" begin
+    for n in (100, 10^4)
+        a = randn(n)
+        exact = Float64(sum(big.(a)))
+        @test exact == xsum(a)
+
+        s1 = accumulate!(XAccumulator(), a[1:n÷2])
+        s2 = accumulate!(XAccumulator(), a[(n÷2)+1:end])
+        @test exact == float(s1 + s2) == float(sum([s1,s2]))
+        @test exact == float(accumulate!(s1, s2))
+        @test exact == float(accumulate!(XAccumulator(), a[2:end]) + a[1]) ==
+                       float(a[1] + accumulate!(XAccumulator(), a[2:end]))
+    end
+end
+
+

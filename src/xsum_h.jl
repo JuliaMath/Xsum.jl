@@ -33,8 +33,13 @@ for kind in ("xsum_small_", "xsum_large_")
             ccall(($(QuoteNode(Symbol(kind,"round"))),libxsum), Cdouble, (Ref{$T},), acc)
         $(Symbol(kind,"chunks_used"))(acc) =
             ccall(($(QuoteNode(Symbol(kind,"chunks_used"))),libxsum), Cint, (Ref{$T},), acc)
+        $(Symbol(kind,"add_accumulator"))(accdest, accsrc) =
+            ccall(($(QuoteNode(Symbol(kind,"add_accumulator"))),libxsum), Cint, (Ref{$T},Ref{$T}), accdest, accsrc)
     end
 end
 
 xsum_small_add1(acc, x::Real) =
     ccall((:xsum_small_add1,libxsum), Cvoid, (Ref{xsum_small_accumulator}, Cdouble), acc, x)
+
+xsum_large_to_small_accumulator(acc_small, acc_large) =
+    ccall((:xsum_large_to_small_accumulator,libxsum), Cvoid, (Ref{xsum_small_accumulator}, Ref{xsum_large_accumulator}), acc_small, acc_large)
