@@ -29,10 +29,16 @@ end
 
         s1 = accumulate!(XAccumulator(), a[1:n÷2])
         s2 = accumulate!(XAccumulator(), a[(n÷2)+1:end])
+        s1′ = deepcopy(s1) # should work like XAccumulator(s1)
+        @test exact == float(accumulate!(s1′, s2))
         @test exact == float(s1 + s2) == float(sum([s1,s2]))
-        @test exact == float(accumulate!(s1, s2))
         @test exact == float(accumulate!(XAccumulator(), a[2:end]) + a[1]) ==
                        float(a[1] + accumulate!(XAccumulator(), a[2:end]))
+
+        a[(n÷2)+1:end] *= -1 # exact
+        @test xsum(a) == float(s1 - s2) == float(-(s2 - s1)) ==
+              float(accumulate!(XAccumulator(), a[2:end]) - (-a[1])) ==
+              float(a[1] - accumulate!(XAccumulator(), -a[2:end]))
     end
 end
 

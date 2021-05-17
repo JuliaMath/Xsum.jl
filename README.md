@@ -22,6 +22,8 @@ flexible sums.  A `s::XAccumulator` object represents partial sum, whose exactly
 rounded `Float64` result is given by `float(s)`.   `s = XAccumulator()` initializes
 a zero sum, and `accumulate!(s, x)` adds `x` to `s` where `x` is a real number
 (converted to `Float64`), an array of `Float64` values, or another `XAccumulator`.
+You can also add and subtract accumulators with `+` and `-` (which operate out-of-place
+so they are less efficient), or negate one in-place with `Xsum.negate!(s)`.
 
 For example, if you wanted to compute an exactly rounded sum of a large vector `x` in parallel, you could call `accumulate!(XAccumulator(), xslice)` on a sequence of *slices*
 (portions) of `x` in parallel, and then combine the sub-accumulators to obtain the

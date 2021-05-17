@@ -75,6 +75,17 @@ Base.accumulate!(s::XAccumulator, x::Complex) = Complex(accumulate!(s, real(x)),
 XAccumulator(init::Complex) = Complex(XAccumulator(real(init)), XAccumulator(imag(init)))
 
 """
+    negate!(s::XAccumulator)
+
+Change `s` in-place to negate the sign of the sum it represents.
+"""
+negate!(s::XAccumulator) = begin xsum_small_negate(s.acc); s; end
+Base.:-(s::XAccumulator) = negate!(XAccumulator(s))
+Base.:-(s::XAccumulator, s′::XAccumulator) = accumulate!(-s′, s)
+Base.:-(s::XAccumulator, x::Real) = accumulate!(XAccumulator(s), -x)
+Base.:-(x::Real, s::XAccumulator) = accumulate!(-s, x)
+
+"""
     xsum([f,] itr)
 
 Compute the exactly rounded double-precision sum of calling `f` (which defaults to `identity`) on
@@ -105,19 +116,7 @@ function _xsum_large(a::StridedVector{Float64})
     @assert stride(a,1) == 1
     acc = Base.RefValue{xsum_large_accumulator}()
     xsum_large_init(acc)
-    if length(a) ≤ typemax(Cint)
-        xsum_large_addv(acc, a)
-    else # libxsum needs arrays in typemax(Cint) chunks
-        i = firstindex(a)
-        l = i + typemax(Cint) - 1
-        e = lastindex(a)
-        while l ≤ e
-            xsum_large_addv(acc, @view a[i:l])
-            i = l + 1
-            l = i + typemax(Cint) - 1
-        end
-        xsum_large_addv(acc, @view a[i:e])
-    end
+    xsum_large_addv(acc, a)
     return acc
 end
 
